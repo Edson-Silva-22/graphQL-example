@@ -11,11 +11,11 @@ export class PostsService {
     @InjectModel(Post.name) private readonly postModel: Model<Post>,
   ){}
 
-  async createPost(createPostInput: CreatePostInput) {
+  async createPost(authUserId: string, createPostInput: CreatePostInput) {
     try {
       const createNewPost = await this.postModel.create({
         content: createPostInput.content,
-        author: createPostInput.authorId,
+        author: authUserId,
       });
       return createNewPost.populate('author');
     } catch (error) {

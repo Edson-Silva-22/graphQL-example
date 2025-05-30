@@ -4,6 +4,7 @@ import { UpdateAuthorInput } from './dto/update-author.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Author } from 'src/schema/author.schema';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class AuthorsService {
@@ -14,10 +15,14 @@ export class AuthorsService {
   async createAuthor(createAuthorInput: CreateAuthorInput) {
     try {
       const authorExist = await this.authorModel.findOne({ email: createAuthorInput.email })
-      
       if (authorExist) throw new BadRequestException('Autor já cadastrado')
 
-      const newAuthor = await this.authorModel.create(createAuthorInput)
+      const hashPassword = await bcrypt.hash(createAuthorInput.password, 10)
+
+      const newAuthor = await this.authorModel.create({
+        ...createAuthorInput,
+        password: hashPassword,
+      })
       return newAuthor;
 
     } catch (error) {
