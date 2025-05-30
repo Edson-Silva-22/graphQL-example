@@ -29,6 +29,10 @@ type Post {
   updatedAt: DateTime!
 }
 
+type Auth {
+  token: String!
+}
+
 type Query {
   findAllAuthors: [Author!]!
   findOneAuthor(id: String!): Author!
@@ -43,6 +47,7 @@ type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   removePost(id: String!): String!
+  login(createAuthInput: CreateAuthInput!): Auth!
 }
 
 input CreateAuthorInput {
@@ -58,12 +63,15 @@ input UpdateAuthorInput {
 }
 
 input CreatePostInput {
-  authorId: String!
   content: String!
 }
 
 input UpdatePostInput {
-  authorId: String
   content: String
   postId: String!
+}
+
+input CreateAuthInput {
+  email: String!
+  password: String!
 }
