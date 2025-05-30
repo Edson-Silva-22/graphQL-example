@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
 import { AuthorsModule } from './authors/authors.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { AuthorsModule } from './authors/authors.module';
       graphiql: true,
       autoSchemaFile: join(process.cwd(), 'src/schema/schema.gql')
     }),
-    AuthorsModule
+    AuthorsModule,
+    PostsModule
   ],
   controllers: [],
   providers: [],
