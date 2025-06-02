@@ -33,11 +33,17 @@ type Auth {
   token: String!
 }
 
+type Search {
+  authors: [Author!]!
+  posts: [Post!]!
+}
+
 type Query {
   findAllAuthors: [Author!]!
   findOneAuthor(id: String!): Author!
   findAllPosts: [Post!]!
   findOnePost(id: String!): Post!
+  search(searchText: String!): Search!
 }
 
 type Mutation {
