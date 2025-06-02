@@ -7,6 +7,7 @@ import { join } from 'path';
 import { AuthorsModule } from './authors/authors.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     AuthorsModule,
     PostsModule,
-    AuthModule
+    AuthModule,
+    SearchModule
   ],
   controllers: [],
   providers: [],
