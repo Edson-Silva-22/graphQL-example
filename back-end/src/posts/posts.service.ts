@@ -26,7 +26,16 @@ export class PostsService {
 
   async findAll() {
     try {
-      const findAllPosts = await this.postModel.find().populate('author');
+      const findAllPosts = await this.postModel.find()
+      .populate('author')
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'Author',
+        }
+      });
+
       return findAllPosts;
     } catch (error) {
       console.error(error)
@@ -46,12 +55,20 @@ export class PostsService {
     }
   }
 
-  async updatePost(id: string, updatePostInput: UpdatePostInput) {
+  async updatePost(updatePostInput: UpdatePostInput) {
     try {
-      const postIsExit = await this.postModel.findById(id);
+      const postIsExit = await this.postModel.findById(updatePostInput.postId);
       if (!postIsExit) throw new BadRequestException('Post não encontrado')
-      const updatePost = await this.postModel.findByIdAndUpdate(id, updatePostInput, { new: true });
-      return updatePost;
+
+      const updatePost = await this.postModel.findByIdAndUpdate(
+        updatePostInput.postId, 
+        {
+          ...updatePostInput,
+          $push: { comments: updatePostInput.newCommentId }
+        }, 
+        { new: true }
+      );
+      return updatePost?.populate('comments');
     } catch (error) {
       console.error(error)
       if (error instanceof BadRequestException) throw error

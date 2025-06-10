@@ -32,7 +32,7 @@ export class PostsResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => Post)
   async updatePost(@Args('updatePostInput') updatePostInput: UpdatePostInput) {
-    return await this.postsService.updatePost(updatePostInput.postId, updatePostInput);
+    return await this.postsService.updatePost(updatePostInput);
   }
 
   @UseGuards(AuthGuard)

@@ -11,5 +11,6 @@ import { Post, PostSchema } from 'src/schema/post.schema';
     ]),
   ],
   providers: [PostsResolver, PostsService],
+  exports: [PostsService]
 })
 export class PostsModule {}

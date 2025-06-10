@@ -16,12 +16,23 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Comment {
+  """Autor do comentário"""
+  author: Author!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Post {
   id: String!
 
   """Autor da publicação"""
   author: Author!
   content: String!
+
+  """Comentários"""
+  comments: [Comment!]
 
   """Quantidade de curtidas"""
   likes: Int!
@@ -44,6 +55,7 @@ type Query {
   findAllPosts: [Post!]!
   findOnePost(id: String!): Post!
   search(searchText: String!): Search!
+  findAllComments(postId: String!): [Comment!]!
 }
 
 type Mutation {
@@ -54,6 +66,7 @@ type Mutation {
   updatePost(updatePostInput: UpdatePostInput!): Post!
   removePost(id: String!): String!
   login(createAuthInput: CreateAuthInput!): Auth!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
 }
 
 input CreateAuthorInput {
@@ -75,9 +88,15 @@ input CreatePostInput {
 input UpdatePostInput {
   content: String
   postId: String!
+  newCommentId: String!
 }
 
 input CreateAuthInput {
   email: String!
   password: String!
+}
+
+input CreateCommentInput {
+  post: String!
+  content: String!
 }
