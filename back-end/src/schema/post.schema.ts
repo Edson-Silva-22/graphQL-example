@@ -11,6 +11,13 @@ export class Post extends Document {
   author: string
 
   @Prop({
+    type: [mongoose.Types.ObjectId],
+    ref: 'Comment',
+    default: []
+  })
+  comments: string[]
+
+  @Prop({
     required: true,
     type: String,
   })

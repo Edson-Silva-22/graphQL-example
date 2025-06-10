@@ -8,6 +8,7 @@ import { AuthorsModule } from './authors/authors.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { SearchModule } from './search/search.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { SearchModule } from './search/search.module';
     AuthorsModule,
     PostsModule,
     AuthModule,
-    SearchModule
+    SearchModule,
+    CommentsModule
   ],
   controllers: [],
   providers: [],

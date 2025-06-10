@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { CreatePostInput } from './create-post.input';
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
@@ -8,4 +8,9 @@ export class UpdatePostInput extends PartialType(CreatePostInput) {
   @IsNotEmpty({message: 'O id do post que será atualizado deve ser informado'})
   @IsString({message: 'O id do post deve ser uma string'})
   postId: string;
+
+  @Field()
+  @IsOptional()
+  @IsString({message: 'O Id do novo comentário deve ser uma string'})
+  newCommentId?: string
 }
