@@ -14,6 +14,7 @@ export class PostsService {
   async createPost(authUserId: string, createPostInput: CreatePostInput) {
     try {
       const createNewPost = await this.postModel.create({
+        title: createPostInput.title,
         content: createPostInput.content,
         author: authUserId,
       });

@@ -21,6 +21,12 @@ export class Post extends Document {
     required: true,
     type: String,
   })
+  title: string
+
+  @Prop({
+    required: true,
+    type: String,
+  })
   content: string
 
   @Prop({
