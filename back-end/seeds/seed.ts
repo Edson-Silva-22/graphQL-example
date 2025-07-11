@@ -160,15 +160,14 @@ export class Seed {
       ];
 
       const postPromises = posts.map((post, index) => {
-        const author = authorIds[index % authorIds.length]; // distribui autores de forma cíclica, caso tenha menos de 10
-        return this.postModel.insertOne({
-          author,
+        return {
+          author: authorIds[index],
           title: post.title,
           content: post.content,
-        });
+        }
       });
 
-      await Promise.all(postPromises);
+      await this.postModel.insertMany(postPromises);
 
       console.log('Posts inseridos com sucesso.');
     } catch (error) {
@@ -184,112 +183,116 @@ export class Seed {
       const authors = await this.authorModel.find().select('id');
 
       const commentsData = [
-        [
-          'Me identifiquei muito! Também comecei com HTML e hoje estou estudando back-end. Parabéns pela jornada!',
-          'Juliana Mota',
-        ],
-        [
-          'Ótimo incentivo para quem está começando. Às vezes a gente só precisa dar o primeiro passo mesmo.',
-          'Lucas Andrade',
-        ],
-
-        [
-          'Começar o dia cedo mudou minha vida também! A dica das pausas é subestimada por muita gente.',
-          'Rafael Torres',
-        ],
-        [
-          'Você usa algum app pra organizar as tarefas? Estou testando o Notion e tô gostando bastante.',
-          'Beatriz Souza',
-        ],
-
-        [
-          'Ubuntu foi minha porta de entrada também! Hoje uso Fedora, mas entendo bem seu ponto.',
-          'Carlos Lima',
-        ],
-        [
-          'Legal demais! Ainda tô com medo de migrar, mas vou testar no dual boot. Valeu pelo relato!',
-          'Lívia Ferreira',
-        ],
-
-        [
-          'Perfeito pra quem tá começando! Git pode parecer difícil no início, mas depois fica automático.',
-          'Fernando Alves',
-        ],
-        [
-          'Faltou mencionar o `git clone` e `branch`, mas mesmo assim ficou muito didático.',
-          'Ana Clara Nunes',
-        ],
-
-        [
-          'Gostei do resumo! Eu achava REST um bicho de sete cabeças até entender a ideia dos verbos HTTP.',
-          'Marcos Paulo',
-        ],
-        [
-          'Poderia fazer um post comparando REST com GraphQL? Seria interessante!',
-          'Larissa Gomes',
-        ],
-
-        [
-          'Notion é vida! Também uso ele pra acompanhar meus estudos e projetos.',
-          'Eduardo Mendes',
-        ],
-        [
-          'Curti a ideia das metas semanais, vou tentar implementar aqui também.',
-          'Tatiane Rocha',
-        ],
-
-        [
-          'Já passei por isso! Refatorar pode ser chato no início, mas a satisfação no final é imensa.',
-          'Bruno Teixeira',
-        ],
-        [
-          'Dá pra fazer uma série só com dicas de refatoração. Seria muito útil!',
-          'Nathalia Correia',
-        ],
-
-        [
-          'Estou usando Vue no meu projeto atual e achei muito fácil de aprender. Mas React ainda é o padrão no mercado.',
-          'Gabriel Antunes',
-        ],
-        [
-          'Já usei os dois e acho que Vue é ótimo pra projetos pequenos. React brilha em apps maiores.',
-          'Samantha Reis',
-        ],
-
-        [
-          'TypeScript salvou meu projeto de vários bugs bobos. Nunca mais desenvolvo em JS puro!',
-          'João Pedro',
-        ],
-        [
-          'Concordo demais! A curva de aprendizado vale muito a pena.',
-          'Milena Martins',
-        ],
-
-        [
-          'Texto inspirador! Estou entrando agora no mercado e suas palavras me motivaram muito.',
-          'Paulo Henrique',
-        ],
-        [
-          'É muito bom ver quem compartilha experiências reais. Obrigada por dividir sua trajetória!',
-          'Camila Ramos',
-        ],
+        {
+          post: posts[0]._id,
+          author: authors[1]._id,
+          content: 'Me identifiquei muito! Também comecei com HTML e hoje estou estudando back-end. Parabéns pela jornada!'
+        },
+        {
+          post: posts[0]._id,
+          author: authors[2]._id,
+          content: 'Ótimo incentivo para quem está começando. Às vezes a gente só precisa dar o primeiro passo mesmo.'
+        },
+        {
+          post: posts[1]._id,
+          author: authors[2]._id,
+          content: 'Começar o dia cedo mudou minha vida também! A dica das pausas é subestimada por muita gente.'
+        },
+        {
+          post: posts[1]._id,
+          author: authors[3]._id,
+          content: 'Você usa algum app pra organizar as tarefas? Estou testando o Notion e tô gostando bastante.'
+        },
+        {
+          post: posts[2]._id,
+          author: authors[3]._id,
+          content: 'Ubuntu foi minha porta de entrada também! Hoje uso Fedora, mas entendo bem seu ponto.'
+        },
+        {
+          post: posts[2]._id,
+          author: authors[4]._id,
+          content: 'Legal demais! Ainda tô com medo de migrar, mas vou testar no dual boot. Valeu pelo relato!'
+        },
+        {
+          post: posts[3]._id,
+          author: authors[4]._id,
+          content: 'Perfeito pra quem tá começando! Git pode parecer difícil no início, mas depois fica automático.'
+        },
+        {
+          post: posts[3]._id,
+          author: authors[5]._id,
+          content: 'Faltou mencionar o `git clone` e `branch`, mas mesmo assim ficou muito didático.'
+        },
+        {
+          post: posts[4]._id,
+          author: authors[5]._id,
+          content: 'Gostei do resumo! Eu achava REST um bicho de sete cabeças até entender a ideia dos verbos HTTP.'
+        },
+        {
+          post: posts[4]._id,
+          author: authors[6]._id,
+          content: 'Poderia fazer um post comparando REST com GraphQL? Seria interessante!'
+        },
+        {
+          post: posts[5]._id,
+          author: authors[6]._id,
+          content: 'Notion é vida! Também uso ele pra acompanhar meus estudos e projetos.'
+        },
+        {
+          post: posts[5]._id,
+          author: authors[7]._id,
+          content: 'Curti a ideia das metas semanais, vou tentar implementar aqui também.'
+        },
+        {
+          post: posts[6]._id,
+          author: authors[7]._id,
+          content: 'Já passei por isso! Refatorar pode ser chato no início, mas a satisfação no final é imensa.'
+        },
+        {
+          post: posts[6]._id,
+          author: authors[8]._id,
+          content: 'Dá pra fazer uma série só com dicas de refatoração. Seria muito útil!'
+        },
+        {
+          post: posts[7]._id,
+          author: authors[8]._id,
+          content: 'Estou usando Vue no meu projeto atual e achei muito fácil de aprender. Mas React ainda é o padrão no mercado.'
+        },
+        {
+          post: posts[7]._id,
+          author: authors[9]._id,
+          content: 'Já usei os dois e acho que Vue é ótimo pra projetos pequenos. React brilha em apps maiores.'
+        },
+        {
+          post: posts[8]._id,
+          author: authors[9]._id,
+          content: 'TypeScript salvou meu projeto de vários bugs bobos. Nunca mais desenvolvo em JS puro!'
+        },
+        {
+          post: posts[8]._id,
+          author: authors[0]._id,
+          content: 'Concordo demais! A curva de aprendizado vale muito a pena.'
+        },
+        {
+          post: posts[9]._id,
+          author: authors[0]._id,
+          content: 'Texto inspirador! Estou entrando agora no mercado e suas palavras me motivaram muito.'
+        },
+        {
+          post: posts[9]._id,
+          author: authors[1]._id,
+          content: 'É muito bom ver quem compartilha experiências reais. Obrigada por dividir sua trajetória!'
+        },
       ];
 
       const commentPromises = commentsData.map(
-        async ([content, name], index) => {
-          const post = posts[index % posts.length];
-          const availableAuthors = authors.filter((a) => a.id != post.author);
-          const author = availableAuthors[index % availableAuthors.length];
+        async (comment, index) => {
 
-          const comment = await this.commentModel.create({
-            post: post._id,
-            author: author._id,
-            content,
-          });
+          const newComment = await this.commentModel.create(comment);
 
           await this.postModel.updateOne(
-            { _id: post._id },
-            { $push: { comments: comment._id } },
+            { _id: comment.post },
+            { $push: { comments: newComment._id } },
           );
         },
       );
