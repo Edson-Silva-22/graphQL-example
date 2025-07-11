@@ -9,6 +9,9 @@ export class Post {
   
   @Field({ description: 'Autor da publicação' })
   author: Author
+
+  @Field()
+  title: string
   
   @Field()
   content: string

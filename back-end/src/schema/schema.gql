@@ -29,6 +29,7 @@ type Post {
 
   """Autor da publicação"""
   author: Author!
+  title: String!
   content: String!
 
   """Comentários"""
