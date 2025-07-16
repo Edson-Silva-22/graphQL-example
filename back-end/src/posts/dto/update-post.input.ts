@@ -9,7 +9,9 @@ export class UpdatePostInput extends PartialType(CreatePostInput) {
   @IsString({message: 'O id do post deve ser uma string'})
   postId: string;
 
-  @Field()
+  @Field({
+    nullable: true
+  })
   @IsOptional()
   @IsString({message: 'O Id do novo comentário deve ser uma string'})
   newCommentId?: string

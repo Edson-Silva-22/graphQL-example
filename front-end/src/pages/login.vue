@@ -1,5 +1,9 @@
 <template>
-  <v-container class="d-flex align-center justify-center h-100">
+  <Alert></Alert>
+  <v-container 
+    class="d-flex align-center justify-center h-100" 
+    style="background-color: #F1F1F3;"
+  >
     <v-card 
       class="pa-5"
       width="400"
@@ -12,6 +16,7 @@
           variant="outlined"
           prepend-inner-icon="mdi-account"
           color="primary"
+          base-color="primary"
           width="100%"
           clearable
           v-model="email"
@@ -24,6 +29,7 @@
           prepend-inner-icon="mdi-lock"
           :type="passwordVisible ? 'text' : 'password'"
           color="primary"
+          base-color="primary"
           width="100%"
           :append-inner-icon="passwordVisible ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append-inner="passwordVisible = !passwordVisible"
@@ -50,49 +56,19 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import gql from 'graphql-tag';
-import { useMutation, useQuery } from '@vue/apollo-composable';
+import { useAuthStore } from '@/stores/auth';
+import Alert from '@/components/Alert.vue';
 
+  const authStore = useAuthStore();
   const router = useRouter();
   const passwordVisible = ref(false);
   const email = ref('');
   const password = ref('');
 
-  const LOGIN_USER = gql`
-    mutation Login ($email: String!, $password: String!) {
-      login(createAuthInput: { email: $email, password: $password }) {
-        token
-      }
-    }
-  `
-  const { mutate } = useMutation(LOGIN_USER);
-
-  // onDone((result) => {
-  //   console.log(result);
-  //   if (result.data.login.token) {
-  //     localStorage.setItem('token', result.data.login.token);
-  //     router.push('/');
-  //   } else {
-  //     alert('Login failed. Please check your credentials.');
-  //   }
-  // })
-
-  // onError((err) => {
-  //   console.error(err)
-  //   alert("Erro na autenticação.");
-  // });
-
   async function login() {
-    const result = await mutate({
-      email: email.value,
-      password: password.value
-    });
-    
-    if (result!.data.login.token) {
-      localStorage.setItem('token', result!.data.login.token);
+    const response = await authStore.login(email.value, password.value);
+    if (response) {
       router.push('/');
-    } else {
-      alert('Login failed. Please check your credentials.');
     }
   }
 </script>

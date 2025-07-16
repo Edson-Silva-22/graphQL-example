@@ -20,7 +20,7 @@ export class AuthService {
       if (!finduser) throw new BadRequestException('Usuário não encontrado')
 
       const comparePassword = await bcrypt.compare(createAuthInput.password, finduser.password)
-      if (!comparePassword) throw new BadRequestException('Senha incorreta')
+      if (!comparePassword) throw new BadRequestException('Senha ou email incorretos')
       
       const payload = { sub: finduser._id, username: finduser.name }
       return {
@@ -28,6 +28,7 @@ export class AuthService {
       }
     } catch (error) {
       console.error(error);
+      if (error instanceof BadRequestException) throw error;
       throw new InternalServerErrorException('Devido a um erro interno, não foi possível realizar o login')
     }
   }
