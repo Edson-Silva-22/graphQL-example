@@ -10,6 +10,16 @@ const routes = [
         path: "",
         name: "home",
         component: () => import('@/pages/home.vue')
+      },
+      {
+        path: "/create-post",
+        name: "post",
+        component: () => import('@/pages/createPost.vue')
+      },
+      {
+        path: "update-post/:postId",
+        name: "update-post",
+        component: () => import('@/pages/updatePost.vue')
       }
     ]
   },

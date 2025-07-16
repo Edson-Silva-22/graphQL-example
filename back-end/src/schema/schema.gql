@@ -91,7 +91,7 @@ input UpdatePostInput {
   title: String
   content: String
   postId: String!
-  newCommentId: String!
+  newCommentId: String
 }
 
 input CreateAuthInput {

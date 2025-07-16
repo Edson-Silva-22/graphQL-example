@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <Alert></Alert>
     <v-text-field
       placeholder="Buscar"
       width="80%"
@@ -18,9 +19,27 @@
       class="mx-auto my-5"
       elevation="2"
       v-for="post in posts"
-      v-show="!loading && posts.length > 0"
+      v-show="!postStore.loading && posts.length > 0"
+      :key="post.id"
     >
-      <v-card-title>{{ post.title }}</v-card-title>
+      <v-menu>
+        <template v-slot:activator="{ props }">
+          <v-btn 
+            color="primary" 
+            icon="mdi-dots-vertical" 
+            variant="text"
+            class="position-absolute	right-0"
+            v-bind="props"
+          ></v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item @click="router.push(`/update-post/${post.id}`)">Editar</v-list-item>
+          <v-list-item @click="removePost(post.id)">Excluir</v-list-item>
+        </v-list>
+      </v-menu>
+      <v-card-text class="pb-0 ">{{ post.author.name }}</v-card-text>
+      <v-card-title class="text-wrap">{{ post.title }}</v-card-title>
       <v-card-text 
         opacity="0.7" 
         :class="post.postContentExpand ? '' : 'text-truncate'"
@@ -54,6 +73,23 @@
           <v-card-text class="font-weight-bold py-0">{{ comment.author.name }}</v-card-text>
           <v-card-text class="py-2" opacity="0.7">{{ comment.content }}</v-card-text>
         </div>
+
+        <v-textarea
+          placeholder="comentar"
+          variant="outlined"
+          color="primary"
+          base-color="primary"
+          rounded
+          append-inner-icon="mdi-send"
+          icon-color="primary"
+          @click:append-inner=""
+          rows="1"
+          max-rows="5"
+          auto-grow
+          clearable
+          glow
+          center-affix
+        ></v-textarea>
       </v-card-item>
     </v-card>
 
@@ -61,7 +97,7 @@
       class="mx-auto my-5 d-flex flex-column align-center"
       color="#F1F1F3"
       elevation="0"
-      v-if="!loading && posts.length === 0"
+      v-if="!postStore.loading && posts.length === 0"
     >
       <v-icon icon="mdi-comment-off" size="64" color="#757575"></v-icon>
       <v-card-subtitle>Nenhum post encontrado</v-card-subtitle>
@@ -72,62 +108,42 @@
       max-width="500px"
       type="article"
       v-for="post in [1,2,3]"
-      v-if="loading"
+      v-if="postStore.loading"
     ></v-skeleton-loader>
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import { gql } from '@apollo/client/core'
-import { useQuery } from '@vue/apollo-composable'
-import { ref, watchEffect } from 'vue'
+import Alert from '@/components/Alert.vue'
+import router from '@/router'
+import { useAlertStore } from '@/stores/alert'
+import { usePostStore } from '@/stores/post'
+import { ref } from 'vue'
 
-const GET_POSTS = gql`
-  query FindAllPosts {
-    findAllPosts {
-      id
-      title
-      content
-      likes
-      createdAt
-      updatedAt
-      author {
-        id
-        name
-        email
-        createdAt
-        updatedAt
-      }
-      comments {
-        content
-        createdAt
-        updatedAt
-        author {
-          id
-          name
-          email
-          createdAt
-          updatedAt
-        }
-      }
-    }
-  }
-`
-
+const alertStore = useAlertStore()
+const postStore = usePostStore()
 const posts = ref<any[]>([])
 
-const { result, loading, error } = useQuery(GET_POSTS)
+async function findAllPosts() {
+  const response = await postStore.findAll()
+  posts.value = response.map((post: any) => {
+    return {
+      ...post,
+      postContentExpand: false,
+      postCommentsExpand: false,
+    }
+  })
+}
 
-watchEffect(() => {
-  if (result.value) {
-    posts.value = result.value.findAllPosts.map((post: any) => {
-      return {
-        ...post,
-        postContentExpand: false,
-        postCommentsExpand: false
-      }
-    })
-    console.log(posts.value)
+async function removePost(postId: string) {
+  const response = await postStore.remove(postId)
+  if (response) {
+    alertStore.createAlert('Post removido com sucesso!', 'success')
+    await findAllPosts()
   }
+}
+
+onMounted(async () => {
+  await findAllPosts()
 })
 </script>
