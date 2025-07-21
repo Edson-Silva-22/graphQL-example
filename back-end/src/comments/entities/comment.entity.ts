@@ -3,6 +3,9 @@ import { Author } from 'src/authors/entities/author.entity';
 
 @ObjectType()
 export class Comment {
+  @Field()
+  id: string
+
   @Field({description: 'Autor do comentário'})
   author: Author
 
