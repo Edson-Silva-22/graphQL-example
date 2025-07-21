@@ -18,7 +18,7 @@
       max-width="500px"
       class="mx-auto my-5"
       elevation="2"
-      v-for="post in posts"
+      v-for="(post, index) in posts"
       v-show="!postStore.loading && posts.length > 0"
       :key="post.id"
     >
@@ -61,7 +61,7 @@
           color="primary" 
           prepend-icon="mdi-comment-outline"
           @click="post.postCommentsExpand = !post.postCommentsExpand"
-        >11k</v-btn>
+        >{{ post.comments.length }}</v-btn>
       </v-card-actions>
       
       <v-card-item v-show="post.postCommentsExpand">
@@ -82,13 +82,14 @@
           rounded
           append-inner-icon="mdi-send"
           icon-color="primary"
-          @click:append-inner=""
+          @click:append-inner="createComment(post.id, index)"
           rows="1"
           max-rows="5"
           auto-grow
           clearable
           glow
           center-affix
+          v-model="comment"
         ></v-textarea>
       </v-card-item>
     </v-card>
@@ -117,12 +118,15 @@
 import Alert from '@/components/Alert.vue'
 import router from '@/router'
 import { useAlertStore } from '@/stores/alert'
+import { useCommentStore } from '@/stores/comment'
 import { usePostStore } from '@/stores/post'
 import { ref } from 'vue'
 
+const commentStore = useCommentStore()
 const alertStore = useAlertStore()
 const postStore = usePostStore()
 const posts = ref<any[]>([])
+const comment = ref('')
 
 async function findAllPosts() {
   const response = await postStore.findAll()
@@ -140,6 +144,14 @@ async function removePost(postId: string) {
   if (response) {
     alertStore.createAlert('Post removido com sucesso!', 'success')
     await findAllPosts()
+  }
+}
+
+async function createComment(postId: string, postIndex: number) {
+  const response = await commentStore.create(postId, comment.value)
+  if (response) {
+    posts.value[postIndex].comments.push(response)
+    comment.value = ''
   }
 }
 
